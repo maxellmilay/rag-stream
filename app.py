@@ -6,11 +6,13 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
+from utils.nlp import clean_string
+
 load_dotenv()
 
 # Streamlit configuration
 st.set_page_config(
-    page_title="RAG Chatbot",
+    page_title="RAG Bot",
     page_icon="🤖",
     layout="centered",
     initial_sidebar_state="expanded",
@@ -56,7 +58,7 @@ if "processed_files" not in st.session_state:
     st.session_state.processed_files = set()
 
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant."}]
+    st.session_state.messages = [{"role": "system", "content": "You are a helpful assistant that only answers the question based on the given context."}]
 
 if "new_file_uploaded" not in st.session_state:
     st.session_state.new_file_uploaded = False
@@ -84,10 +86,11 @@ if uploaded_files:
                 # Chunk content and store embeddings
                 chunks = chunk_text(content, max_tokens=8192)
                 for i, chunk in enumerate(chunks):
+                    cleaned_chunk = clean_string(chunk)
                     document_id = f"{uploaded_file.name}_chunk_{i}"
                     collection.add(
-                        documents=[chunk],
-                        metadatas=[{"filename": uploaded_file.name, "chunk_index": i}],
+                        documents=[cleaned_chunk],
+                        metadatas=[{"filename": uploaded_file.name, "chunk_index": i, "full_content": chunk}],
                         ids=[document_id]
                     )
                 st.success(f"Content from {uploaded_file.name} stored in Chroma DB!")
@@ -102,22 +105,22 @@ if uploaded_files:
 user_input = st.text_input("Ask a question:", placeholder="Type your question here...")
 
 if user_input and not st.session_state.new_file_uploaded:  # Generate response only if no new files were uploaded
-    st.session_state.messages.append({"role": "user", "content": user_input})
-
     # Retrieve relevant documents from Chroma DB
     with st.spinner("Retrieving relevant context..."):
-        results = collection.query(query_texts=[user_input], n_results=3, include=["documents"])
-        context = " ".join([item for doc in results["documents"] for item in doc])
+        results = collection.query(query_texts=[user_input], n_results=3, include=["metadatas"])
+        # print(results["metadatas"][0][0]["full_content"])
+        context = " ".join([item["full_content"] for metadata in results["metadatas"] for item in metadata])
+        
+    st.session_state.messages.append({"role": "user", "content": f"Context: {context}\n\nQuestion: {user_input}"})
+
+    print(context)
 
     # Query OpenAI with the retrieved context
     with st.spinner("Generating response..."):
         try:
             response = client.chat.completions.create(
                 model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant that only answers the question based on the given context."},
-                    {"role": "user", "content": f"Context: {context}\n\nQuestion: {user_input}"}
-                ],
+                messages=st.session_state.messages,
             )
             reply = response.choices[0].message.content
             st.session_state.messages.append({"role": "assistant", "content": reply})
@@ -128,6 +131,8 @@ if user_input and not st.session_state.new_file_uploaded:  # Generate response o
 # Display conversation history
 for message in st.session_state.messages[1:]:
     if message["role"] == "user":
-        st.write(f"**You:** {message['content']}")
+        st.write("**YOU**")
+        st.write(f"{message['content']}")
     else:
-        st.write(f"**Bot:** {message['content']}")
+        st.write("**BOT**")
+        st.write(f"{message['content']}")
