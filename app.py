@@ -31,6 +31,16 @@ openai_ef = embedding_functions.OpenAIEmbeddingFunction(
 collection_name = "file_embeddings"
 collection = chroma_client.get_or_create_collection(name=collection_name, embedding_function=openai_ef)
 
+st.session_state.conversations = [
+    {
+        "id": 1,
+        "messages": [{"role": "system", "content": "You are a helpful assistant that only answers the question based on the given context."}],
+        "title": "Current Conversation"
+    }
+]
+
+st.session_state.current_conversation_id = 1
+
 # Function to chunk text
 def chunk_text(text, max_tokens=8192):
     words = text.split()
@@ -52,6 +62,15 @@ def chunk_text(text, max_tokens=8192):
         chunks.append(" ".join(current_chunk))
 
     return chunks
+
+def switch_current_conversation(conversation_id):
+    st.session_state.current_conversation_id = conversation_id
+
+st.sidebar.title("Conversations")
+
+for conversation in st.session_state.conversations:
+    if st.sidebar.button(conversation["title"], type="secondary"):
+        switch_current_conversation(conversation["id"])
 
 # Initialize session state for processed files and chatbot interaction
 if "processed_files" not in st.session_state:
