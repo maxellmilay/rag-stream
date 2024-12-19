@@ -1,7 +1,5 @@
 from typing import List
 
-from scipy.spatial.distance import cosine
-
 import re
 import string
 import nltk
