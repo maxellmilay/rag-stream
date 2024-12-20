@@ -1,5 +1,7 @@
 # Chatbot with RAG using Streamlit Journal
 
+Site: https://rag-stream-232591557642.us-central1.run.app
+
 Creating RAG applications is quite simple if you think of its basic architecture. All you need to have is a vector database, a large language model, and some embedding function. The learning curve then typically happens when a RAG chatbot is being integrated into a system, either a large codebase, or a some feature that needs a chatbot, where custom functionalities are needed. For me, I encountered a quite unorthodox problem, where the framework that was given to me lacks the capacity to handle the complex functionlities in my head.
 
 This is the first time that I had developed using Streamlit. Moreover, this is the first time that I had created an LLM based application where the backend is not separated with the frontend. I am used to developing large scale applications, where in my previous projects and occupation, I always had to think in the big picture, like how to create UIs and APIs such that it can be easily be built upon in the future. While I was using Steamlit, I cannot envision a large scale project using the framework itself. Maybe it's because I do not have enough experience with it, and if that is the case, I am more than willing to be proven wrong.
