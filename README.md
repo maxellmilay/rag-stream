@@ -8,7 +8,9 @@ This is the first time that I had developed using Streamlit. Moreover, this is t
 
 Streamlit is really wierd since the code to render the UI in the browser is integrated in the main code itself. I feel like developing with express or flask, but in this case, I am coding the UI in the server. I also tried replicating the concept of components like in most frontend frameworks like React, but I had no time to refactor the code as I was also experimenting with other features that I can add to the main application.
 
-## Architecture
+Another thing is ChromaDB, I expected it to be a learning curve since the only vector database experience I had was with pgvector, a postgreSQL extension that allows vector models in the database. With Chroma's in-memory capabilities, I did not have to persist anything.
+
+## Application RAG Logic
 
 ### Storing Knowledge Base Embeddings
 
