@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 ENV STREAMLIT_SERVER_HEADLESS true
-ENV STREAMLIT_SERVER_PORT 8501
+ENV STREAMLIT_SERVER_PORT 8080
 ENV STREAMLIT_SERVER_ADDRESS 0.0.0.0
 
 RUN apt-get update && apt-get install -y \
@@ -18,6 +18,10 @@ COPY . /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-EXPOSE 8501
+RUN python -m nltk.downloader punkt
+RUN python -m nltk.downloader stopwords
+RUN python -m nltk.downloader wordnet
 
-ENTRYPOINT ["streamlit", "run", "app.py"]
+EXPOSE 8080
+
+ENTRYPOINT ["streamlit", "run", "--server.port", "8080", "app.py"]

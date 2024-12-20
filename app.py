@@ -105,10 +105,10 @@ if uploaded_files:
                 # Chunk content and store embeddings
                 chunks = chunk_text(content, max_tokens=8192)
                 for i, chunk in enumerate(chunks):
-                    cleaned_chunk = clean_string(chunk)
+                    # cleaned_chunk = clean_string(chunk)
                     document_id = f"{uploaded_file.name}_chunk_{i}"
                     collection.add(
-                        documents=[cleaned_chunk],
+                        documents=[chunk],
                         metadatas=[{"filename": uploaded_file.name, "chunk_index": i, "full_content": chunk}],
                         ids=[document_id]
                     )
