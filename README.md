@@ -24,6 +24,8 @@ I initially planned to create different conversations and store each correspondi
   <img src="./documentation/images/generate-completion.png"/>
 </p>
 
+This part is quite straightforward, where I retrieve the relevant similar context to the input query, augment the context with the query, and then generate a completion from an LLM, in this case, from a GPT model. 
+
 ## Deployment
 
 The deployment is really simple. I created a Dockerfile based on a python image, where i created a custom image of my application. After that, I uploaded the locally built image into a repository in Google Cloud Artifact Registry. Once I had the image URI, I then deployed the Streamlit application into Google Cloud Run. I tried to map my a subdomain of my portfolio domain maxellmilay.com, but I had issues integrating GoDaddy with GCP since it was an experimental beta feature.
