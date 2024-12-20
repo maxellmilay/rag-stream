@@ -26,6 +26,8 @@ I initially planned to create different conversations and store each correspondi
 
 The deployment is really simple. I created a Dockerfile based on a python image, where i created a custom image of my application. After that, I uploaded the locally built image into a repository in Google Cloud Artifact Registry. Once I had the image URI, I then deployed the Streamlit application into Google Cloud Run. I tried to map my a subdomain of my portfolio domain maxellmilay.com, but I had issues integrating GoDaddy with GCP since it was an experimental beta feature.
 
+> NOTE: I have uploaded the files to GitHub and Google Drive, but I did not include the `.env` (environment variables) and `key.json` (GCP service account key)
+
 ## Takeaways
 
 Overall, my only comment with Streamlit is that it is ideal for prototyping a data-based application, but I can't see it yet to be used in building a large software where there are multiple complex features.
